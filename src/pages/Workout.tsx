@@ -84,6 +84,22 @@ export function Workout() {
     }
   };
 
+  const fillAllSetsWithFirstWeight = (exerciseId: string) => {
+    if (!currentWorkout) return;
+    
+    const exercise = currentWorkout.exercises.find(e => e.exerciseId === exerciseId);
+    if (!exercise) return;
+
+    const firstSet = exercise.sets.find(s => s.setNumber === 1);
+    if (!firstSet || firstSet.weight === 0) return;
+
+    exercise.sets.forEach(set => {
+      if (set.setNumber !== 1) {
+        updateExerciseSet(exerciseId, set.setNumber, { weight: firstSet.weight });
+      }
+    });
+  };
+
   const resetSet = (exerciseId: string, setNumber: number) => {
     const trainingDay = TRAINING_PLAN.find(day => day.type === currentWorkout?.dayType);
     const exercise = trainingDay?.exercises.find(e => e.id === exerciseId);
@@ -212,13 +228,24 @@ export function Workout() {
                     <span className="text-orange-500 mr-2">{exerciseIndex + 1}.</span>
                     {exercise.exerciseName}
                   </CardTitle>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={() => window.open(trainingDay.exercises[exerciseIndex].videoUrl, '_blank')}
-                  >
-                    <Video size={16} />
-                  </Button>
+                  <div className="flex items-center gap-2">
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => fillAllSetsWithFirstWeight(exercise.exerciseId)}
+                      className="text-orange-400 border-orange-500/30 hover:bg-orange-500/10"
+                    >
+                      <Copy size={14} className="mr-1" />
+                      一键填充
+                    </Button>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => window.open(trainingDay.exercises[exerciseIndex].videoUrl, '_blank')}
+                    >
+                      <Video size={16} />
+                    </Button>
+                  </div>
                 </div>
               </CardHeader>
               <CardContent>
