@@ -50,6 +50,11 @@ export function Home() {
     }
   };
 
+  const computeFirstDayOffset = (monthStartDate: Date): number => {
+    const day = monthStartDate.getDay();
+    return day === 0 ? 6 : day - 1;
+  };
+
   const todayTraining = getTrainingDayByDate(new Date());
   const todayDateStr = format(new Date(), 'yyyy-MM-dd');
   const todayCompleted = workoutHistory.some(r => r.date === todayDateStr && r.completedAt);
@@ -102,6 +107,9 @@ export function Home() {
                   ))}
                 </div>
                 <div className="grid grid-cols-7 gap-2">
+                  {Array.from({ length: computeFirstDayOffset(monthStart) }).map((_, i) => (
+                    <div key={`empty-${i}`} className="p-2"></div>
+                  ))}
                   {daysInMonth.map((day, index) => {
                     const dayType = getDayTypeForDate(day);
                     const completed = isWorkoutCompleted(day);
