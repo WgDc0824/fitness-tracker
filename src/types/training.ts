@@ -9,11 +9,20 @@ export interface Exercise {
   muscleGroup: string;
 }
 
+export interface StretchExercise {
+  id: string;
+  name: string;
+  duration: string;
+  videoUrl?: string;
+  muscleGroup: string;
+}
+
 export interface TrainingDay {
   day: number;
   type: DayType;
   name: string;
   exercises: Exercise[];
+  stretchExercises: StretchExercise[];
   restTime: number;
 }
 

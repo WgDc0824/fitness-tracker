@@ -313,6 +313,43 @@ export function Workout() {
           ))}
         </div>
 
+        {trainingDay.stretchExercises.length > 0 && (
+          <div className="mt-6">
+            <Card variant="elevated" className="border-green-500/30">
+              <CardHeader>
+                <div className="flex items-center justify-between">
+                  <CardTitle className="text-green-400">训练后拉伸</CardTitle>
+                  <Video size={16} className="text-green-400" />
+                </div>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-3">
+                  {trainingDay.stretchExercises.map((stretch, index) => (
+                    <div key={stretch.id} className="flex items-center justify-between p-3 rounded-lg bg-gray-900/50">
+                      <div className="flex-1">
+                        <div className="flex items-center gap-2">
+                          <span className="text-green-500 font-semibold">{index + 1}.</span>
+                          <span className="font-medium">{stretch.name}</span>
+                        </div>
+                        <div className="text-sm text-gray-400 mt-1">
+                          {stretch.muscleGroup} · {stretch.duration}
+                        </div>
+                      </div>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => window.open(stretch.videoUrl, '_blank')}
+                      >
+                        <Play size={16} className="text-green-400" />
+                      </Button>
+                    </div>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        )}
+
         <div className="mt-6">
           <Card variant="elevated">
             <CardHeader>
