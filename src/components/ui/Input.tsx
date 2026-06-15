@@ -1,4 +1,4 @@
-import { InputHTMLAttributes, forwardRef } from 'react';
+import { InputHTMLAttributes, forwardRef, useState, useEffect } from 'react';
 import { cn } from '@/utils/cn';
 
 interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
@@ -37,7 +37,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
 
 Input.displayName = 'Input';
 
-interface NumberInputProps extends Omit<InputProps, 'type' | 'onChange'> {
+interface NumberInputProps extends Omit<InputProps, 'type' | 'value' | 'onChange'> {
   value: number;
   onChange: (value: number) => void;
   min?: number;
@@ -47,6 +47,51 @@ interface NumberInputProps extends Omit<InputProps, 'type' | 'onChange'> {
 
 export const NumberInput = forwardRef<HTMLInputElement, NumberInputProps>(
   ({ className, value, onChange, min = 0, max, step = 1, label, error, ...props }, ref) => {
+    const [displayValue, setDisplayValue] = useState<string>(value === 0 ? '' : String(value));
+
+    useEffect(() => {
+      setDisplayValue(value === 0 ? '' : String(value));
+    }, [value]);
+
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+      const raw = e.target.value;
+
+      if (raw === '' || raw === '-') {
+        setDisplayValue(raw);
+        return;
+      }
+
+      const normalized = raw.replace(/[^\d.]/g, '');
+      const parts = normalized.split('.');
+      const sanitized = parts.length > 2 ? parts[0] + '.' + parts.slice(1).join('') : normalized;
+
+      setDisplayValue(sanitized);
+    };
+
+    const handleBlur = () => {
+      if (displayValue === '' || displayValue === '-') {
+        onChange(0);
+        setDisplayValue('');
+        return;
+      }
+
+      let num = parseFloat(displayValue);
+      if (isNaN(num)) num = 0;
+      if (max !== undefined) num = Math.min(num, max);
+      num = Math.max(min, num);
+
+      const rounded = step < 1
+        ? Math.round(num * 10) / 10
+        : Math.round(num);
+
+      onChange(rounded);
+      setDisplayValue(rounded === 0 ? '' : String(rounded));
+    };
+
+    const handleFocus = (e: React.FocusEvent<HTMLInputElement>) => {
+      e.target.select();
+    };
+
     return (
       <div className="w-full">
         {label && (
@@ -56,16 +101,12 @@ export const NumberInput = forwardRef<HTMLInputElement, NumberInputProps>(
         )}
         <input
           ref={ref}
-          type="number"
-          value={value}
-          onChange={(e) => {
-            const newValue = parseFloat(e.target.value) || 0;
-            const clampedValue = max !== undefined ? Math.min(newValue, max) : newValue;
-            onChange(Math.max(min, clampedValue));
-          }}
-          min={min}
-          max={max}
-          step={step}
+          type="text"
+          inputMode="decimal"
+          value={displayValue}
+          onChange={handleChange}
+          onBlur={handleBlur}
+          onFocus={handleFocus}
           className={cn(
             'w-full px-3 py-2 rounded-lg bg-gray-900 border-2 border-gray-700',
             'text-white text-center',
