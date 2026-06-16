@@ -17,11 +17,11 @@ export const TRAINING_PLAN: TrainingDay[] = [
       },
       {
         id: 'chest_2',
-        name: '上斜器械推胸',
+        name: '史密斯机上斜卧推',
         sets: 4,
         reps: 12,
         muscleGroup: '上胸',
-        videoUrl: 'https://www.bilibili.com/video/BV1HC8HztEXX'
+        videoUrl: 'https://www.bilibili.com/video/BV1cdXKB9Efj'
       },
       {
         id: 'chest_3',
