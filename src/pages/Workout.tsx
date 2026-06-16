@@ -172,23 +172,6 @@ export function Workout() {
           </div>
         </header>
 
-        <div className="mb-4">
-          <Card>
-            <CardContent>
-              <div className="flex items-center justify-between">
-                <div className="text-sm text-gray-400">
-                  <div className="font-semibold mb-1">训练规则：</div>
-                  <div>组间休息 {trainingDay.restTime}秒 · 每组目标 {trainingDay.exercises[0].reps}次</div>
-                </div>
-                <Button variant="outline" size="sm">
-                  <Video size={16} className="mr-1" />
-                  教学视频
-                </Button>
-              </div>
-            </CardContent>
-          </Card>
-        </div>
-
         {activeTimer && (
           <div className="mb-4">
             <Card variant="elevated" className="bg-orange-900/20 border-orange-500">
@@ -246,6 +229,10 @@ export function Workout() {
                       <Video size={16} />
                     </Button>
                   </div>
+                </div>
+                <div className="flex items-center gap-4 mt-2 text-sm text-gray-500">
+                  <span>目标 {exercise.sets.length}组 × {exercise.reps}次</span>
+                  <span>组间休息 {trainingDay.restTime}秒</span>
                 </div>
               </CardHeader>
               <CardContent>
