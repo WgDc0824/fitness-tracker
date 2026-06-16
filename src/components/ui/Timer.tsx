@@ -9,7 +9,7 @@ interface TimerProps {
 
 export function Timer({ initialSeconds, onComplete }: TimerProps) {
   const [seconds, setSeconds] = useState(initialSeconds);
-  const [isRunning, setIsRunning] = useState(false);
+  const [isRunning, setIsRunning] = useState(true);
 
   useEffect(() => {
     if (!isRunning) return;
@@ -27,6 +27,12 @@ export function Timer({ initialSeconds, onComplete }: TimerProps) {
 
     return () => clearInterval(interval);
   }, [isRunning, onComplete]);
+
+  // 当initialSeconds变化时，重置并自动开始
+  useEffect(() => {
+    setSeconds(initialSeconds);
+    setIsRunning(true);
+  }, [initialSeconds]);
 
   const formatTime = (totalSeconds: number) => {
     const mins = Math.floor(totalSeconds / 60);
