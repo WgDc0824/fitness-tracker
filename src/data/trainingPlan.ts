@@ -21,7 +21,7 @@ export const TRAINING_PLAN: TrainingDay[] = [
         sets: 4,
         reps: 12,
         muscleGroup: '上胸',
-        videoUrl: 'https://www.bilibili.com/video/BV1eW411b7gC'
+        videoUrl: 'https://www.bilibili.com/video/BV1HC8HztEXX'
       },
       {
         id: 'chest_3',
@@ -69,7 +69,7 @@ export const TRAINING_PLAN: TrainingDay[] = [
         sets: 4,
         reps: 12,
         muscleGroup: '背阔肌',
-        videoUrl: 'https://www.bilibili.com/video/BV1Jb41117tN'
+        videoUrl: 'https://www.bilibili.com/video/BV1b2V36mELj'
       },
       {
         id: 'back_2',
@@ -109,7 +109,7 @@ export const TRAINING_PLAN: TrainingDay[] = [
         name: '猫牛式脊柱放松',
         duration: '60秒',
         muscleGroup: '竖脊肌/脊柱',
-        videoUrl: 'https://www.bilibili.com/video/BV18J411E7ia'
+        videoUrl: 'https://www.bilibili.com/video/BV1K741147ZL'
       }
     ]
   },
@@ -141,7 +141,7 @@ export const TRAINING_PLAN: TrainingDay[] = [
         sets: 4,
         reps: 12,
         muscleGroup: '三角肌后束',
-        videoUrl: 'https://www.bilibili.com/video/BV1ez4y1z7FP'
+        videoUrl: 'https://www.bilibili.com/video/BV1o8411676B'
       },
       {
         id: 'shoulders_4',
