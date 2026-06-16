@@ -225,7 +225,7 @@ export function Workout() {
                   </div>
                 </div>
                 <div className="flex items-center gap-4 mt-2 text-sm text-gray-500">
-                  <span>目标 {exercise.sets.length}组 × {exercise.reps}次</span>
+                  <span>目标 {exercise.sets.length}组 × {trainingDay.exercises[exerciseIndex].reps}次</span>
                   <span>组间休息 {trainingDay.restTime}秒</span>
                 </div>
               </CardHeader>
