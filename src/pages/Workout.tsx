@@ -28,7 +28,7 @@ export function Workout() {
     loadCurrentWorkout
   } = useWorkoutStore();
 
-  const [activeTimer, setActiveTimer] = useState<number | null>(null);
+  const [activeTimers, setActiveTimers] = useState<Record<string, number>>({});
   const [showPBAlert, setShowPBAlert] = useState<string | null>(null);
 
   useEffect(() => {
@@ -115,12 +115,22 @@ export function Workout() {
     }
   };
 
-  const startRestTimer = (seconds: number) => {
-    setActiveTimer(seconds);
+  const startRestTimer = (exerciseId: string, setNumber: number, seconds: number) => {
+    const key = `${exerciseId}_${setNumber}`;
+    setActiveTimers(prev => ({ ...prev, [key]: seconds }));
   };
 
-  const handleTimerComplete = () => {
-    setActiveTimer(null);
+  const closeTimer = (exerciseId: string, setNumber: number) => {
+    const key = `${exerciseId}_${setNumber}`;
+    setActiveTimers(prev => {
+      const newTimers = { ...prev };
+      delete newTimers[key];
+      return newTimers;
+    });
+  };
+
+  const handleTimerComplete = (exerciseId: string, setNumber: number) => {
+    closeTimer(exerciseId, setNumber);
     if ('Notification' in window && Notification.permission === 'granted') {
       new Notification('休息结束', { body: '开始下一组训练！' });
     }
@@ -171,22 +181,6 @@ export function Workout() {
             </div>
           </div>
         </header>
-
-        {activeTimer && (
-          <div className="mb-4">
-            <Card variant="elevated" className="bg-orange-900/20 border-orange-500">
-              <CardContent className="flex items-center justify-between">
-                <div>
-                  <div className="text-sm text-gray-400 mb-1">组间休息</div>
-                  <Timer initialSeconds={activeTimer} onComplete={handleTimerComplete} />
-                </div>
-                <Button variant="ghost" size="sm" onClick={() => setActiveTimer(null)}>
-                  关闭
-                </Button>
-              </CardContent>
-            </Card>
-          </div>
-        )}
 
         {showPBAlert && (
           <div className="mb-4 fixed top-4 right-4 z-50">
@@ -262,7 +256,7 @@ export function Workout() {
                           <Button
                             variant="ghost"
                             size="sm"
-                            onClick={() => startRestTimer(set.restTime)}
+                            onClick={() => startRestTimer(exercise.exerciseId, set.setNumber, set.restTime)}
                           >
                             <Play size={14} />
                           </Button>
@@ -312,6 +306,33 @@ export function Workout() {
                           className="w-full px-3 py-1.5 rounded bg-gray-900 border border-gray-700 text-sm text-white placeholder-gray-500 focus:border-orange-500 focus:outline-none"
                         />
                       </div>
+
+                      {(() => {
+                        const timerKey = `${exercise.exerciseId}_${set.setNumber}`;
+                        const timerSeconds = activeTimers[timerKey];
+                        if (!timerSeconds) return null;
+                        return (
+                          <div className="mt-3 p-3 rounded-lg bg-orange-900/30 border border-orange-500/50">
+                            <div className="flex items-center justify-between">
+                              <div>
+                                <div className="text-sm text-gray-400 mb-1">组间休息</div>
+                                <Timer
+                                  key={timerKey}
+                                  initialSeconds={timerSeconds}
+                                  onComplete={() => handleTimerComplete(exercise.exerciseId, set.setNumber)}
+                                />
+                              </div>
+                              <Button
+                                variant="ghost"
+                                size="sm"
+                                onClick={() => closeTimer(exercise.exerciseId, set.setNumber)}
+                              >
+                                关闭
+                              </Button>
+                            </div>
+                          </div>
+                        );
+                      })()}
 
                       {set.actualReps < 12 && set.weight > 0 && (
                         <div className="mt-2 flex items-center gap-2 text-yellow-500 text-sm">
